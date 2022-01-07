@@ -1,4 +1,3 @@
-import pytest
 from snippets.fetch_account_balance import fetch_account_balance
 
 

@@ -10,7 +10,7 @@ import requests
 def check_for_confirmation(*, bank_ip, block_signature):
 
     success = False  # Flag to check if the operation was successful.
-    message = ""  # Variable that hosts the balance/ error message.
+    message = ""
 
     confirmation_check_url = f"http://{bank_ip}/confirmation_blocks?block=&block__signature={block_signature}"
 
@@ -19,8 +19,11 @@ def check_for_confirmation(*, bank_ip, block_signature):
         response = requests.get(confirmation_check_url)
 
         if response.status_code == 200:
-            success = True
-            message = str(response.json()["count"])
+            if response.json()["count"] > 0:
+                success = True
+                message = "Transaction confirmed!"
+            else:
+                message = "Transaction not confirmed!"
 
         else:
             message = "{'error': 'Code: %s.'}" % response.status_code
@@ -40,4 +43,4 @@ def check_for_confirmation(*, bank_ip, block_signature):
 
     return success, message
 
-print(check_for_confirmation(bank_ip="45.56.92.194", block_signature="b462e69d1e24699cf235c7e9ec8286e62a2571a96403e9a9e1cb28eec8b5e80ccd4a872cf66f38baa3b4daec70e864e08d152b35e8b14c33c1c2a878a04e8706"))
+print(check_for_confirmation(bank_ip="45.56.92.194", block_signature="8adc553962e9dad5c0f5f130449ee59795224cd6bee2e463cbb9439904f59ab8e4f28aeb67bf9eec1d175989620b2b4aa6160fdb2bbe2974444c0f5ac469b40e"))
